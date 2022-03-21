@@ -1,5 +1,5 @@
 const ytdl = require("ytdl-core");
-
+const Stream = require("stream");
 /**
  * 
  * @param {import("discord.js").Guild} guild 
@@ -7,7 +7,7 @@ const ytdl = require("ytdl-core");
  * @param {import("./../../modules/Queue").serversQueues} queue 
  * @returns 
  */
-const play = (guild, song, queue) => {
+const play = async (guild, song, queue) => {
     const serverQueue = queue.get(guild.id);
 
     if (song === null || song == undefined) {
@@ -16,11 +16,25 @@ const play = (guild, song, queue) => {
         return;
     }
 
+    /** 
+     * @type {Buffer}
+     */
+    const downloadedSong = await new Promise((resolve, _) => {
+        const chunks = [];
+
+        ytdl(song.url, {
+            filter: "audioonly"
+        })
+        .on("data", (chunk) => {
+            chunks.push(chunk);
+        })
+        .on("end", () => {
+            resolve(Buffer.concat(chunks));
+        })
+    });
+
     const dispatcher = serverQueue.connection
-        .play(ytdl(song.url, {
-            filter:"audioonly",
-            quality:"highestaudio"
-        }))
+        .play(new Stream.Readable.from(downloadedSong))
         .on("finish", () => {
             serverQueue.songs.shift();
             play(guild, serverQueue.songs[0], queue);
@@ -30,7 +44,7 @@ const play = (guild, song, queue) => {
             serverQueue.songs.shift();
         });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${song.title}**`);
+    await serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${song.title}**`);
 }
 
 module.exports = play;

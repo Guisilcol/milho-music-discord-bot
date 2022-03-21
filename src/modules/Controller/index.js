@@ -63,14 +63,13 @@ const execute = (client, config) => {
                 serversQueues.set(serverQueue.guild.id, serverQueue);
             }
 
-
             /*
                 Trecho especificando os comandos do bot
             */
 
             const args = message.content.split(" ");
 
-            if (message.content.startsWith(`${config.prefix} play`)) {
+            if (message.content.startsWith(`${config.prefix} play `)) {
                 const song = await youtubeService.getMusicInfo(args[2]);
                 
                 //E um link do youtube?
@@ -80,7 +79,7 @@ const execute = (client, config) => {
                         try {
                             serverQueue.connection = await serverQueue.voiceChannel.join();
                             serverQueue.songs.push(song);
-                            youtubeService.play(serverQueue.guild, serverQueue.songs[0], serversQueues);
+                            await youtubeService.play(serverQueue.guild, serverQueue.songs[0], serversQueues);
 
                         } catch (error) {
                             console.log(error);
@@ -95,9 +94,9 @@ const execute = (client, config) => {
                         return;
                     }
                 }
-            } else if (message.content.startsWith(`${config.prefix} skip`)) {
+            } else if (message.content.startsWith(`${config.prefix} skip `)) {
                 youtubeService.skip(message, serverQueue);
-            } else if (message.content.startsWith(`${config.prefix} stop`)) {
+            } else if (message.content.startsWith(`${config.prefix} stop `)) {
                 
             } else {
                 message.channel.send("Comando inválido!");
