@@ -1,23 +1,17 @@
 const ytdl = require("ytdl-core");
+const createMusicInfo = require("./../../modules/Music");
 
 /**
- * 
- * @typedef {Object} Song
- * @property {string} songInfo
- * @property {string} url
- */
-
-
-/**
- * 
- * @returns {Song}
+ * @param {string} link
+ * @returns {import("./../../modules/Music").MusicInfo}
  */
 const getMusicInfo = async (link) => {
     const songInfo = await ytdl.getInfo(link);
-    return {
+    return createMusicInfo({
         title: songInfo.videoDetails.title,
         url: songInfo.videoDetails.video_url,
-    };
+        service: 'youtube'
+    });
 }
 
 module.exports = getMusicInfo;

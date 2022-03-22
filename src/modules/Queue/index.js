@@ -6,7 +6,7 @@
  * @property {import("discord.js").VoiceChannel} voiceChannel
  * @property {import("discord.js").VoiceConnection | null} connection 
  * @property {import("discord.js").Guild} guild
- * @property {Object[]} songs
+ * @property {import("./../Music").MusicInfo[]} songs
  * @property {number} volume
  * @property {boolean} playing
  */
@@ -25,7 +25,7 @@ const createQueue = (textChannel, voiceChannel, guild) => {
         connection: null,
         songs: [],
         volume: 5,
-        playing: true
+        playing: false
     }
 }
 
