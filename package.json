@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "MIT",
+  "scripts": {
+    "run": "node src/index.js"
+  },
   "dependencies": {
     "@discordjs/opus": "^0.7.0",
     "discord.js": "12.5.3",
