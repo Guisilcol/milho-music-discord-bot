@@ -1,9 +1,10 @@
 
 /**
  * @param {import("discord.js").Message} message
+ * @param {import("./../modules/Queue").Queue} serverQueue
  * @returns {boolean}
  */
-const userHavePermission = (message) => {
+const userHavePermission = (message, serverQueue) => {
     const permissions = serverQueue.voiceChannel.permissionsFor(message.client.user);
     //O bot tem permissão de entrar em sala e falar?
     return (!permissions.has("CONNECT") || !permissions.has("SPEAK")); 

@@ -35,7 +35,7 @@ const onMessage = async (message, serversQueues, config) => {
 
     if (message.content.startsWith(`${config.prefix} play `)) {
         try {
-            if(!Validation.userHavePermission(message)){
+            if(!Validation.userHavePermission(message, serverQueue)){
                 await serverQueue.textChannel.send("O cabaço, tu não tem permissão falar ou de ouvir");
                 return;
             }
