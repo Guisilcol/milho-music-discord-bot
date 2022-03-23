@@ -21,19 +21,6 @@ const setMusicInfoWithService = async (content) => {
 * @param {import("./../config")} config
 */
 const onMessage = async (message, serversQueues, config) => {
-
-    if (Validation.isTheBotTheAuthor(message)) return;
-    if (!Validation.isBotCommand(message, config)) return;
-    if (!Validation.userHavePermission(message, serverQueue)){
-        await serverQueue.textChannel.send("O cabaço, tu não tem permissão falar ou de ouvir");
-        return;
-    }
-
-    if (!Validation.userIsConnectedInChannel(message)){
-        await serverQueue.textChannel.send("Dar play em musica fora da sala de voz = chuva em chapecó");
-        return;
-    }
-
     const args = message.content.split(" ");
 
     const serverQueue = serversQueues.get(message.guild.id) === undefined
@@ -42,6 +29,24 @@ const onMessage = async (message, serversQueues, config) => {
 
     serversQueues.set(serverQueue.guild.id, serverQueue);
 
+    /* 
+        TRECHO DE VALIDACAO
+    */
+
+    if (Validation.isTheBotTheAuthor(message)) return;
+    if (!Validation.isBotCommand(message, config)) return;
+    if (!Validation.userHavePermission(message, serverQueue)){
+        await serverQueue.textChannel.send("O cabaço, tu não tem permissão falar ou de ouvir");
+        return;
+    }
+    if (!Validation.userIsConnectedInChannel(message)){
+        await serverQueue.textChannel.send("Dar play em musica fora da sala de voz = chuva em chapecó");
+        return;
+    }
+
+    /* 
+        TRECHO DE COMANDOS
+    */
     if (message.content.startsWith(`${config.prefix} play `)) {
         try {
             const url = args[2];
