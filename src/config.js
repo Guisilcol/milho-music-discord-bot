@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 module.exports = {
     //Prefixo para comunicação com o bot
     prefix: process.env.prefix,
