@@ -35,6 +35,16 @@ const onMessage = async (message, serversQueues, config) => {
 
     if (message.content.startsWith(`${config.prefix} play `)) {
         try {
+            if(!Validation.userHavePermission(message)){
+                await serverQueue.textChannel.send("O cabaço, tu não tem permissão falar ou de ouvir");
+                return;
+            }
+
+            if(!Validation.userIsConnectedInChannel(message)){
+                await serverQueue.textChannel.send("Dar play em musica fora da sala de voz = chuva em chapecó");
+                return;
+            }
+
             const url = args[2];
 
             const firstMusicInfo = await setMusicInfoWithService(url);
@@ -72,13 +82,18 @@ const onMessage = async (message, serversQueues, config) => {
             await serverQueue.textChannel.send(`Ocorreu um **ERRO**: ${error.message}`);
         }
     } else if (message.content.startsWith(`${config.prefix} skip`)) {
-        /*
-        if (!Validation.userHavePermission(message)) return; 
-        if (!Validation.userIsConnectedInChannel(message)) return; 
-        */
+        if(!Validation.userIsConnectedInChannel(message)){
+            await serverQueue.textChannel.send("Dar skip em musica fora da sala de voz = chuva em chapecó");
+            return;
+        }
 
         await MediaPlayer.skip(serverQueue);
     } else if (message.content.startsWith(`${config.prefix} stop`)) {
+        if(!Validation.userIsConnectedInChannel(message)){
+            await serverQueue.textChannel.send("Dar stop em musica fora da sala de voz = chuva em chapecó");
+            return;
+        }
+
         await MediaPlayer.stop(serverQueue);
     } else if (message.content.startsWith(`${config.prefix} queue`)){
         
@@ -92,8 +107,10 @@ const onMessage = async (message, serversQueues, config) => {
         }
 
         await serverQueue.textChannel.send(textContent);
+        return;
     } else {
         await message.channel.send("Comando inválido!");
+        return;
     }
 }
 
