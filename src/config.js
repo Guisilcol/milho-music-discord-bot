@@ -1,7 +1,7 @@
 module.exports = {
     //Prefixo para comunicação com o bot
-    prefix: "!m",
+    prefix: process.env.prefix,
     
     //Token do AUTH2 do Discord
-    token: "OTU0NzYxODgzNzI5MTQxNzYx.YjX1Sw.wFR6bSA0xjQFr8kEYyhj853egdQ"
+    token: process.env.token
 }
