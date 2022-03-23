@@ -63,7 +63,7 @@ const onMessage = async (message, serversQueues, config) => {
             return;
 
         } else {
-            await message.channel.send(`${musicInfo.title} foi adicionado na fila!`);
+            await message.channel.send(`${firstMusicInfo.title} foi adicionado na fila!`);
             return;
         }
 
