@@ -3,5 +3,5 @@ module.exports = {
     prefix: "!m",
     
     //Token do AUTH2 do Discord
-    token: ""
+    token: "OTU0NzYxODgzNzI5MTQxNzYx.YjX1Sw.wFR6bSA0xjQFr8kEYyhj853egdQ"
 }
