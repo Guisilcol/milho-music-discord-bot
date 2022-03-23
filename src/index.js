@@ -11,4 +11,5 @@ setupDiscordClient(client, config, serversQueues);
 
 client.login(config.token);
 
-http.createServer(() => console.log("> Heroku: ping feito com sucesso")).listen(process.env.PORT || 6000);
+http.createServer((_, response) => response.end())
+    .listen(process.env.PORT || 6000);
