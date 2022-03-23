@@ -34,40 +34,43 @@ const onMessage = async (message, serversQueues, config) => {
     serversQueues.set(serverQueue.guild.id, serverQueue);
 
     if (message.content.startsWith(`${config.prefix} play `)) {
-        const url = args[2];
+        try {
+            const url = args[2];
 
-        const firstMusicInfo = await setMusicInfoWithService(url);
-
-        serverQueue.songs.push(firstMusicInfo);
-
-        if (!serverQueue.playing) {
-            if (serverQueue.connection === null) {
-                serverQueue.connection = await serverQueue.voiceChannel.join();
+            const firstMusicInfo = await setMusicInfoWithService(url);
+    
+            serverQueue.songs.push(firstMusicInfo);
+    
+            if (!serverQueue.playing) {
+                if (serverQueue.connection === null) {
+                    serverQueue.connection = await serverQueue.voiceChannel.join();
+                }
+    
+                serverQueue.playing = true;
+    
+                while (serverQueue.songs[0] !== undefined) {
+                    const musicInfo = serverQueue.songs[0];
+                    const music = await youtubeService.getMusic(musicInfo.url);
+    
+                    await serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${musicInfo.title}**`);
+                    await MediaPlayer.play(serverQueue, music);
+                    serverQueue.songs.shift();
+                }
+    
+                serverQueue.playing = false;
+    
+                serverQueue.voiceChannel.leave();
+                serversQueues.delete(serverQueue.guild.id);
+                return;
+    
+            } else {
+                await message.channel.send(`${firstMusicInfo.title} foi adicionado na fila!`);
+                return;
             }
-
-            serverQueue.playing = true;
-
-            while (serverQueue.songs[0] !== undefined) {
-                const musicInfo = serverQueue.songs[0];
-                const music = await youtubeService.getMusic(musicInfo.url);
-
-                await serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${musicInfo.title}**`);
-                await MediaPlayer.play(serverQueue, music);
-                serverQueue.songs.shift();
-            }
-
-            serverQueue.playing = false;
-
-            serverQueue.voiceChannel.leave();
-            serversQueues.delete(serverQueue.guild.id);
-            return;
-
-        } else {
-            await message.channel.send(`${firstMusicInfo.title} foi adicionado na fila!`);
-            return;
+        } catch (error) {
+            console.error(error);
+            await serverQueue.textChannel.send(`Ocorreu um **ERRO**: ${error.message}`);
         }
-
-
     } else if (message.content.startsWith(`${config.prefix} skip`)) {
         /*
         if (!Validation.userHavePermission(message)) return; 
