@@ -7,7 +7,7 @@
 const userHavePermission = (message, serverQueue) => {
     const permissions = serverQueue.voiceChannel.permissionsFor(message.client.user);
     //O bot tem permissão de entrar em sala e falar?
-    return (!permissions.has("CONNECT") || !permissions.has("SPEAK")); 
+    return (permissions.has("CONNECT") && permissions.has("SPEAK")); 
     
 };
 
