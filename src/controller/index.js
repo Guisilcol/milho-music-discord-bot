@@ -36,9 +36,9 @@ const onMessage = async (message, serversQueues, config) => {
     if (message.content.startsWith(`${config.prefix} play `)) {
         const url = args[2];
 
-        const musicInfo = await setMusicInfoWithService(url);
+        const firstMusicInfo = await setMusicInfoWithService(url);
 
-        serverQueue.songs.push(musicInfo);
+        serverQueue.songs.push(firstMusicInfo);
 
         if (!serverQueue.playing) {
             if (serverQueue.connection === null) {
@@ -48,7 +48,8 @@ const onMessage = async (message, serversQueues, config) => {
             serverQueue.playing = true;
 
             while (serverQueue.songs[0] !== undefined) {
-                const music = await youtubeService.getMusic(serverQueue.songs[0].url);
+                const musicInfo = serverQueue.songs[0];
+                const music = await youtubeService.getMusic(musicInfo.url);
 
                 await serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${musicInfo.title}**`);
                 await MediaPlayer.play(serverQueue, music);
