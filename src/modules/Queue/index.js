@@ -15,14 +15,15 @@
  * @param {import("discord.js").TextChannel} textChannel 
  * @param {import("discord.js").VoiceChannel} voiceChannel 
  * @param {import("discord.js").Guild} guild 
+  * @param {import("discord.js").VoiceConnection} connection 
  * @returns {Queue} Discord server Queue
  */
-const createQueue = (textChannel, voiceChannel, guild) => {
+const createQueue = (textChannel, voiceChannel, guild, connection) => {
     return {
         textChannel: textChannel,
         voiceChannel: voiceChannel,
         guild: guild,
-        connection: null,
+        connection: connection,
         songs: [],
         volume: 5,
         playing: false

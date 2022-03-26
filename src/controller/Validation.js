@@ -1,11 +1,12 @@
+const { MessageAttachment } = require("discord.js");
 
 /**
  * @param {import("discord.js").Message} message
  * @param {import("./../modules/Queue").Queue} serverQueue
  * @returns {boolean}
  */
-const userHavePermission = (message, serverQueue) => {
-    const permissions = serverQueue.voiceChannel.permissionsFor(message.client.user);
+const userHavePermission = (message) => {
+    const permissions = message.member.voice.channel.permissionsFor(message.client.user);
     //O bot tem permissão de entrar em sala e falar?
     return (permissions.has("CONNECT") && permissions.has("SPEAK")); 
     
@@ -13,10 +14,43 @@ const userHavePermission = (message, serverQueue) => {
 
 /**
  * @param {import("discord.js").Message} message
+ * @param {import("discord.js").Guild} guild
  * @returns {boolean}
  */
-const userIsConnectedInChannel = (message) => {
-    return !message.member.voice.channel === null;
+const userIsOnTheSameVoiceChannelAsTheBot = (message) => {
+    const botVoiceChannel = message.guild.voice.channel;
+    const memberVoiceChannel = message.member.voice.channel;
+    return (botVoiceChannel === memberVoiceChannel);
+}
+
+/**
+ * 
+ * @param {import("discord.js").Message} message
+ */
+const botIsConnectedInVoiceChannel = (message) => {
+    const guild = message.guild;
+    
+    if(guild === null) {
+        return false;
+    }
+
+    if(guild.voice === null){
+        return false;
+    }
+    if(guild.voice.connection === null){
+        return false;
+    } 
+
+    return true;
+}
+
+/**
+ * @param {import("discord.js").Message} message
+ * @returns {boolean}
+ */
+const userIsConnectedInVoiceChannel = (message) => {
+
+    return !!message.member.voice.channel;
 };
 
 /**
@@ -37,7 +71,9 @@ const isTheBotTheAuthor = (message) => {
 
 module.exports = {
     userHavePermission,
-    userIsConnectedInChannel,
+    userIsConnectedInVoiceChannel,
     isBotCommand,
-    isTheBotTheAuthor
+    isTheBotTheAuthor,
+    userIsOnTheSameVoiceChannelAsTheBot,
+    botIsConnectedInVoiceChannel
 }
