@@ -34,7 +34,7 @@ const botIsConnectedInVoiceChannel = (message) => {
         return false;
     }
 
-    if(guild.voice === null){
+    if(guild.voice === null || guild.voice === undefined){
         return false;
     }
     if(guild.voice.connection === null){
