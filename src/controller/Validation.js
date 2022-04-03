@@ -14,6 +14,14 @@ const userHavePermission = (message) => {
 
 /**
  * @param {import("discord.js").Message} message
+ * @returns {boolean}
+ */
+const isPrivateMessage = (message) => {
+    return (message.guild === null || message.guild === undefined);
+}
+
+/**
+ * @param {import("discord.js").Message} message
  * @param {import("discord.js").Guild} guild
  * @returns {boolean}
  */
@@ -65,7 +73,7 @@ const isBotCommand = (message, config) => {
  * @param {import("discord.js").Message} message
  * @returns {boolean}
  */
-const isTheBotTheAuthor = (message) => {
+const isABotTheAuthor = (message) => {
     return message.author.bot;
 };
 
@@ -73,7 +81,8 @@ module.exports = {
     userHavePermission,
     userIsConnectedInVoiceChannel,
     isBotCommand,
-    isTheBotTheAuthor,
+    isABotTheAuthor,
     userIsOnTheSameVoiceChannelAsTheBot,
-    botIsConnectedInVoiceChannel
+    botIsConnectedInVoiceChannel,
+    isPrivateMessage
 }
