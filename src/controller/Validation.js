@@ -1,4 +1,3 @@
-const { MessageAttachment } = require("discord.js");
 
 /**
  * @param {import("discord.js").Message} message

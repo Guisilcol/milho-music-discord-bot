@@ -8,8 +8,10 @@ const youtube = require("./Youtube");
  */
  const setMusicInfoWithService = async (content) => {
     if (youtube.isYoutubeLink(content)) {
-        return youtube.getMusicInfo(content)
+        return await youtube.getMusicInfo(content);
     }
+
+    return await youtube.getMusicInfo(content);
 }
 
 
