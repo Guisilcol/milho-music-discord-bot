@@ -55,13 +55,15 @@ const play = async (message, textChannel, serversQueues) => {
         
         const args = message.content.split(" ");
         const url = args[2];
-        const musicInfoFromCommand = await Service.setMusicInfoWithService(url);
+        let musicInfoFromCommand = null;
+        try{
+            musicInfoFromCommand = await Service.setMusicInfoWithService(url);
+            serverQueue.songs.push(musicInfoFromCommand);
+        }catch(error){
+            await textChannel.send("Essa música ai não da pra baixar caralho");
+            return;
+        }
 
-        serverQueue.songs.push(musicInfoFromCommand);
-        /*
-            ************* ARRUMAR O FATO DO BOT  NÃO ESTAR FUNCIOANDNO COM ALGUMAS MUSICAS 
-            ************* A FILA NÃO PODE PARAR POR COMPLETO QUANDO UMA MUSICA QUE NAO FUNCIONA É INFORMADA
-        */
         if (!serverQueue.playing) {
             serverQueue.playing = true;
 
@@ -70,17 +72,16 @@ const play = async (message, textChannel, serversQueues) => {
                     const musicInfo = serverQueue.songs[0];
                     const music = await Service.youtube.getMusic(musicInfo.url)
                         .catch(error => {
+                            console.error(error);
                             throw new Error("Não foi possivel capturar a música informada")
                         });
     
                     await serverQueue.textChannel.send(`Corno broxa ta tocando isso aqui agora: **${musicInfo.title}**`);
-                    await MediaPlayer.play(serverQueue, music)
-                        .catch(error => {
-                            throw new Error("Ocorreu um erro ao tocar a musica")
-                        });
+                    await MediaPlayer.play(serverQueue, music);
                     serverQueue.songs.shift();
                 } catch (error) {
-                    console.error(error)
+                    console.error(error);
+                    serverQueue.songs.shift();
                 }
             }
 
@@ -96,7 +97,6 @@ const play = async (message, textChannel, serversQueues) => {
         }
     } catch (error) {
         console.error(error);
-
         await textChannel.send(`Ocorreu um **ERRO**: ${error.message}`);
 
         if(Validation.botIsConnectedInVoiceChannel(message)){

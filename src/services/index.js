@@ -4,7 +4,7 @@ const youtube = require("./Youtube");
 /**
  * 
  * @param {string} content 
- * @returns {import("./../modules/Music").MusicInfo}
+ * @returns {Promise<import("./../modules/Music").MusicInfo>}
  */
  const setMusicInfoWithService = async (content) => {
     if (youtube.isYoutubeLink(content)) {
